@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h1 class="h3 mb-1">{{ target.name }}</h1>
+    <div class="text-secondary">{{ target.base_url }}</div>
+    <div class="text-secondary small mt-1">Owner: {{ target.owner or "-" }} • Env: {{ target.environment or "-" }}</div>
+  </div>
+  <div class="d-flex gap-2">
+    {% if not target.is_archived %}
+      <form method="post" action="/targets/{{ target.id }}/scan">
+        <button class="btn btn-primary" type="submit">Run passive scan</button>
+      </form>
+      <form method="post" action="/targets/{{ target.id }}/archive">
+        <button class="btn btn-outline-secondary" type="submit">Archive</button>
+      </form>
+    {% else %}
+      <form method="post" action="/targets/{{ target.id }}/unarchive">
+        <button class="btn btn-outline-light" type="submit">Unarchive</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% if target.notes %}
+<div class="card card-surface mb-3">
+  <div class="card-header">Notes</div>
+  <div class="card-body text-secondary">{{ target.notes }}</div>
+</div>
+{% endif %}
+
+<div class="card card-surface">
+  <div class="card-header">Scan history</div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover mb-0 align-middle">
+        <thead>
+          <tr>
+            <th>Scan</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Started</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in scans %}
+          <tr>
+            <td><a class="link-light" href="/scans/{{ s.id }}">#{{ s.id }}</a></td>
+            <td>
+              <span class="badge bg-{{ 'danger' if s.overall_severity=='high' else ('warning' if s.overall_severity=='medium' else 'success') }}">
+                {{ s.overall_score }} / 100
+              </span>
+            </td>
+            <td class="text-secondary">{{ s.http_status or '-' }}</td>
+            <td class="text-secondary">{{ s.started_at }}</td>
+          </tr>
+          {% endfor %}
+          {% if scans|length == 0 %}
+          <tr><td colspan="4" class="text-secondary p-3">No scans yet.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+:root {
+  --surface: #0f141b;
+  --surface-2: #121a24;
+}
+
+body {
+  background: radial-gradient(1200px 600px at 20% 0%, #111a24 0%, #0b0f14 55%, #080b0f 100%);
+}
+
+.card-surface {
+  background: rgba(18, 26, 36, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.table-dark {
+  --bs-table-bg: transparent;
+}
+
+.alert.subtle {
+  background: rgba(255, 193, 7, 0.12);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  color: #f1d277;
+}
+
+a.link-secondary:hover, a.link-light:hover { text-decoration: underline; }

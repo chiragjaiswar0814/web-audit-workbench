@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-3">
+  <h1 class="h3 mb-1">Add target</h1>
+  <div class="text-secondary">Targets must be owned or explicitly authorized for assessment.</div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="card card-surface">
+  <div class="card-body">
+    <form method="post" action="/targets/new">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Name</label>
+          <input class="form-control" name="name" value="{{ target.name if target else '' }}" placeholder="Marketing site" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Base URL</label>
+          <input class="form-control" name="base_url" value="{{ target.base_url if target else '' }}" placeholder="https://example.com/" required>
+          <div class="form-text">Only http:// or https:// URLs. No credentials in URLs.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Owner</label>
+          <input class="form-control" name="owner" value="{{ target.owner if target else '' }}" placeholder="team-name">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Environment</label>
+          <select class="form-select" name="environment">
+            {% set env = (target.environment if target else '') %}
+            <option value="" {% if not env %}selected{% endif %}>-</option>
+            <option value="local" {% if env=='local' %}selected{% endif %}>local</option>
+            <option value="dev" {% if env=='dev' %}selected{% endif %}>dev</option>
+            <option value="staging" {% if env=='staging' %}selected{% endif %}>staging</option>
+            <option value="prod" {% if env=='prod' %}selected{% endif %}>prod</option>
+            <option value="public" {% if env=='public' %}selected{% endif %}>public</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Notes</label>
+          <textarea class="form-control" name="notes" rows="4" placeholder="Context, known constraints, change window...">{{ target.notes if target else '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a class="btn btn-outline-secondary" href="/targets">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

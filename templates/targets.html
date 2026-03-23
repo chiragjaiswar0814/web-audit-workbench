@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h3 mb-1">Targets</h1>
+    <div class="text-secondary">Manage authorized review targets.</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-light" href="/targets/new">Add target</a>
+    {% if archived %}
+      <a class="btn btn-outline-secondary" href="/targets">View active</a>
+    {% else %}
+      <a class="btn btn-outline-secondary" href="/targets?archived=1">View archived</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card card-surface">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover mb-0 align-middle">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Base URL</th>
+            <th>Owner</th>
+            <th>Env</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in targets %}
+          <tr>
+            <td><a class="link-light fw-semibold" href="/targets/{{ t.id }}">{{ t.name }}</a></td>
+            <td class="text-secondary">{{ t.base_url }}</td>
+            <td class="text-secondary">{{ t.owner or "-" }}</td>
+            <td class="text-secondary">{{ t.environment or "-" }}</td>
+            <td>
+              {% if t.is_archived %}
+                <span class="badge bg-secondary">Archived</span>
+              {% else %}
+                <span class="badge bg-success">Active</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+          {% if targets|length == 0 %}
+          <tr><td colspan="5" class="text-secondary p-3">No targets in this view.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
